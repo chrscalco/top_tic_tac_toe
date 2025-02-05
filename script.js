@@ -16,8 +16,8 @@ const Gameboard = (function() {
 
     const getBoard = () => board;
 
-    const addMarker = (choice, player) => {
-        board[choice[0]][choice[1]] = player.getMarker();
+    const addMarker = (row, col, player) => {
+        board[row][col] = player.getMarker();
     };
 
     return {getBoard, printBoard, addMarker};
@@ -33,18 +33,11 @@ function GameController () {
 
         this.name = name;
         this.marker = marker;
-    
-        const getInput = () => {
-            choice = [];
-            choice[0] = prompt("Give me the row.");
-            choice[1] = prompt("Give me the col.");
-            return choice;
-        }
 
         const getName = () => name;
         const getMarker = () => marker;
     
-        return {getInput, getName, getMarker};
+        return {getName, getMarker};
     }
 
     const playerOne = createPlayer("Player 1", "x");
@@ -62,34 +55,33 @@ function GameController () {
         }
     }
 
-    const winConditions = (board, player) => {
+    const winConditions = (board, marker) => {
+        //ROWS
         for (i=0; i<3; i++) {
-            if (board[i][0] === player.getMarker() && board[i][1] === player.getMarker() 
-                && board[i][2] === player.getMarker()) {
+            if (board[i][0] === marker && board[i][1] === marker && board[i][2] === marker) {
                 return true;
             }
         } 
+        //COLUMNS
         for (j=0; j<3; j++) {
-            if (board[0][j] === player.getMarker() && board[1][j] === player.getMarker() 
-                && board[2][j] === player.getMarker()) {
+            if (board[0][j] === marker && board[1][j] === marker && board[2][j] === marker) {
                 return true;
             }
         }
-        if (board[0][0] === player.getMarker() && board[1][1] === player.getMarker() && 
-            board[2][2] === player.getMarker()){
+        //DIAGONALS
+        if (board[0][0] === marker && board[1][1] === marker && board[2][2] === marker){
             return true;
-        } else if (board[0][2] === player.getMarker() && board[1][1] === player.getMarker() && 
-                    board[2][0] === player.getMarker()) {
+        } else if (board[0][2] === marker && board[1][1] === marker && board[2][0] === marker) {
             return true;
         } else {
             return false;
         }
     }
-
+    
     const checkGameStatus = (player) => {
         const checkBoard = Gameboard.getBoard().filter((a) => (a[0] === "") || (a[1] === "") || (a[2] === ""));
 
-        if(winConditions(Gameboard.getBoard(), player)) {
+        if(winConditions(Gameboard.getBoard(), player.getMarker())) {
             console.log(player.getName() + " wins!")
         } else if (!checkBoard.length) {
             console.log("Its a draw!")
@@ -98,19 +90,62 @@ function GameController () {
         )
     }
 
-    const playRound = () => {
+    const playRound = (row, col) => {
 
         console.log("Active player is: " + activePlayer.getName());
-        choice = activePlayer.getInput();
-        Gameboard.addMarker(choice, activePlayer);
+        Gameboard.addMarker(row, col, activePlayer);
         checkGameStatus(activePlayer);
-
 
         Gameboard.printBoard();
         switchPlayer();
     }
 
-    return {playRound, getActivePlayer}
+    return {playRound, getActivePlayer};
 }
 
-const game = GameController();
+function ScreenController() {
+
+    const game = GameController();
+    const playerTurnDiv = document.querySelector('.player');
+    const boardDiv = document.querySelector('.board');
+
+    const updateScreen = () => {
+
+        boardDiv.textContent = '';
+
+        const board = Gameboard.getBoard();
+        const activePlayer = game.getActivePlayer();
+
+        playerTurnDiv.textContent = activePlayer.getName() + "'s turn.";
+
+        for (i=0; i<3; i++) {
+            for (j=0; j<3; j++) {
+                const cellButton = document.createElement("button");
+                cellButton.classList.add("cell");
+
+                cellButton.dataset.row = i;
+                cellButton.dataset.column = j;
+                cellButton.textContent = board[i][j];
+                boardDiv.appendChild(cellButton);
+                if (board[i][j] === '') {
+                    cellButton.addEventListener("click", clickHandlerBoard);
+                }
+            }
+        }
+
+    }
+
+    function clickHandlerBoard(e) {
+        const col = e.target.dataset.column;
+        const row = e.target.dataset.row;
+
+        console.log({col, row});
+
+        game.playRound(row, col);
+        updateScreen();
+    }
+      
+    updateScreen();
+}
+
+ScreenController();
