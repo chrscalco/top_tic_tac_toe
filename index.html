@@ -8,10 +8,33 @@
     <script src="script.js" defer></script>
 </head>
 <body>
+
+    <dialog id="name-dialog">
+        <div class="dialog-div">
+            <form action="#">
+                <div>
+                    <label for="player1">Enter Player 1 name:</label>
+                    <input type="text" name="player1" id="player1-name">
+                </div>
+                <div>
+                    <label for="player2">Enter Player 2 name:</label>
+                    <input type="text" name="player2" id="player2-name">
+                </div>
+
+                <button id="save-names">SAVE</button>
+            </form>
+        </div>
+    </dialog>
+
     <div class="container">
-        <h1 class="player"></h1>
+        <h1>TIC TAC TOE</h1>
+        <h2 class="player"></h1>
         <div class="board"></div>
+        <div>
+            <button class="start-button">START</button>
+            <button class="restart-button">RESTART</button>
+        </div>
     </div>
-    
+
 </body>
 </html>

@@ -12,7 +12,13 @@ const Gameboard = (function() {
         }
     }
 
-    const printBoard = () => console.log(board);
+    const restartBoard = () => {
+        for (i=0; i<size; i++) {
+            for (j=0; j<size; j++) {
+                board[i][j] = '';
+            }
+        }
+    }
 
     const getBoard = () => board;
 
@@ -20,7 +26,7 @@ const Gameboard = (function() {
         board[row][col] = player.getMarker();
     };
 
-    return {getBoard, printBoard, addMarker};
+    return {getBoard, restartBoard, addMarker};
 
 })();
 
@@ -33,11 +39,18 @@ function GameController () {
 
         this.name = name;
         this.marker = marker;
+        points = 0;
 
         const getName = () => name;
         const getMarker = () => marker;
+
+        const setName = (newName) => {
+            name = newName;
+        }
+
+        const addPoint = () => points++;
     
-        return {getName, getMarker};
+        return {getName, getMarker, setName, addPoint};
     }
 
     const playerOne = createPlayer("Player 1", "x");
@@ -46,6 +59,11 @@ function GameController () {
     let activePlayer = players[0];
 
     const getActivePlayer = () => activePlayer;
+
+    const setNames = (player1Name, player2Name) => {
+        players[0].setName(player1Name);
+        players[1].setName(player2Name);
+    }
 
     const switchPlayer = () => {
         if (activePlayer === players[0]) {
@@ -82,9 +100,12 @@ function GameController () {
         const checkBoard = Gameboard.getBoard().filter((a) => (a[0] === "") || (a[1] === "") || (a[2] === ""));
 
         if(winConditions(Gameboard.getBoard(), player.getMarker())) {
-            console.log(player.getName() + " wins!")
+            alert(player.getName() + " wins!")
+            activePlayer.addPoint();
+            Gameboard.restartBoard();
         } else if (!checkBoard.length) {
-            console.log("Its a draw!")
+            alert("Its a draw!")
+            Gameboard.restartBoard();
         } else (
             console.log("Next round.")
         )
@@ -95,15 +116,35 @@ function GameController () {
         console.log("Active player is: " + activePlayer.getName());
         Gameboard.addMarker(row, col, activePlayer);
         checkGameStatus(activePlayer);
-
-        Gameboard.printBoard();
         switchPlayer();
     }
 
-    return {playRound, getActivePlayer};
+    return {playRound, getActivePlayer, setNames};
 }
 
 function ScreenController() {
+
+    const startButton = document.querySelector(".start-button");
+    const nameDialog = document.querySelector("#name-dialog");
+    const dialogButton = document.querySelector("#save-names");
+
+    const restartButton = document.querySelector(".restart-button");
+
+    startButton.addEventListener("click", () => {
+        nameDialog.showModal();
+    })
+
+    dialogButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        game.setNames(document.getElementById("player1-name").value, document.getElementById("player2-name").value);
+        nameDialog.close();
+        updateScreen();
+    })
+
+    restartButton.addEventListener("click", () => {
+        Gameboard.restartBoard();
+        updateScreen();
+    })
 
     const game = GameController();
     const playerTurnDiv = document.querySelector('.player');
@@ -145,7 +186,6 @@ function ScreenController() {
         updateScreen();
     }
       
-    updateScreen();
 }
 
 ScreenController();
