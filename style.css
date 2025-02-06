@@ -20,7 +20,7 @@ body {
     font-family: 'press_start_2pregular', sans-serif;
 }
 
-h2, h1 {
+h3, h2, h1 {
     color: white;
 }
 
@@ -28,8 +28,13 @@ h2 {
     height: 50px;
 }
 
+h3 {
+    margin-left: 60px;
+}
+
 .start-button,
-.restart-button {
+.restart-button,
+#save-names {
     font-family: 'press_start_2pregular', sans-serif;
     margin-top: 30px;
     text-align: center;
@@ -60,11 +65,14 @@ h2 {
     text-align: center;
     font-size: 100px;
     border: none;
+    font-family: 'press_start_2pregular', sans-serif;
     cursor: pointer;
 }
 
-#dialog {
+#name-dialog {
     margin: auto;
+    padding: 0;
+    bottom: 400px;
 }
 
 .dialog-div {
@@ -72,6 +80,19 @@ h2 {
     align-items: center;
     justify-content: center;
     padding: 20px;
-    height: 150px;
-    width: 150px;
+    height: 300px;
+    width: 400px;
+    font-family: 'press_start_2pregular', sans-serif;
+}
+
+.form-row {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.player-points {
+    display: flex;
+    flex-direction: row;
 }

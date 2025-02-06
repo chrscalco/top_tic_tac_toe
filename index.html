@@ -12,16 +12,16 @@
     <dialog id="name-dialog">
         <div class="dialog-div">
             <form action="#">
-                <div>
-                    <label for="player1">Enter Player 1 name:</label>
+                <div class="form-row">
+                    <label for="player1">Enter Player X name:</label>
                     <input type="text" name="player1" id="player1-name">
                 </div>
-                <div>
-                    <label for="player2">Enter Player 2 name:</label>
+                <div class="form-row">
+                    <label for="player2">Enter Player O name:</label>
                     <input type="text" name="player2" id="player2-name">
                 </div>
 
-                <button id="save-names">SAVE</button>
+                <div class="form-row"><button id="save-names">SAVE</button></div>
             </form>
         </div>
     </dialog>
@@ -33,6 +33,10 @@
         <div>
             <button class="start-button">START</button>
             <button class="restart-button">RESTART</button>
+        </div>
+        <div class="player-points">
+            <h3 class="player1-points"></h3>
+            <h3 class="player2-points"></h3>
         </div>
     </div>
 
